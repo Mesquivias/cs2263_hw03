@@ -6,6 +6,11 @@
 ![hw_03 Class Diagram (1)](https://user-images.githubusercontent.com/98442060/155861803-1d8057f3-6efb-4d5d-b151-87026d77d40c.png)
 
 
+NOTE: I did not use a courseProcessor class because I could not get it to work.
+
+The first image is a class diagram showing how the App class uses some of the methods from the Course class. 
+
+The second image is a drawing of roughly how I wanted my UI to look. 
 
 ##JavaDocs
 
