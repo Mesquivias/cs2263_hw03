@@ -19,11 +19,12 @@ license{
 
 javadoc {
     source = sourceSets.main.allJava
+    classpath = configurations.runtimeClasspath
     destinationDir = file("docs/javadoc")
 }
 
 javafx {
-    version = "16"
+    version = "17"
     modules = [ 'javafx.controls' ]
 }
 
