@@ -3,12 +3,191 @@
  */
 package cs2263_hw03;
 
-public class App {
-    public String getGreeting() {
-        return "Hello World!";
+import com.google.gson.*;
+import javafx.application.Application;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+import javafx.collections.FXCollections;
+import java.io.*;
+
+
+public class App extends  Application{
+    private final String[] course = {"Computer Science", "Mathematics", "Chemistry", "Physics", "Biology", "Electrical Engineering"};
+
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+        primaryStage.setTitle("Course Editor");
+
+        TableView tableView = new TableView();
+
+        TableColumn<Course, String> column1 = new TableColumn<>("Department");
+        column1.setCellValueFactory(new PropertyValueFactory<>("department"));
+
+        TableColumn<Course, String> column2 = new TableColumn<>("Course code");
+        column2.setCellValueFactory(new PropertyValueFactory<>("courseCode"));
+
+        TableColumn<Course, String> column3 = new TableColumn<>("Class name");
+        column3.setCellValueFactory(new PropertyValueFactory<>("courseName"));
+
+        TableColumn<Course, String> column4 = new TableColumn<>("Number of credits");
+        column4.setCellValueFactory(new PropertyValueFactory<>("credits"));
+
+        tableView.getColumns().add(column1);
+        tableView.getColumns().add(column2);
+        tableView.getColumns().add(column3);
+        tableView.getColumns().add(column4);
+        tableView.resizeColumn(column1, 150);
+        tableView.resizeColumn(column2, 150);
+        tableView.resizeColumn(column3, 150);
+        tableView.resizeColumn(column4, 150);
+        tableView.setPlaceholder(new Label("No information to display!"));
+        tableView.setEditable(true);
+
+        //Create a combo box
+        ComboBox<String> comboBox = new ComboBox<String>();
+
+        comboBox.getItems().addAll(course);
+        comboBox.setTranslateX(0);
+        comboBox.setTranslateY(0);
+        comboBox.setPromptText("Department");
+
+        //Create HBoxes for the text fields and buttons
+        HBox text = new HBox();
+        HBox buttons = new HBox();
+
+        //Exit button
+        Button exit = new Button("Quit");
+        exit.setTranslateX(80);
+        exit.setTranslateY(0);
+        buttons.getChildren().add(exit);
+
+        exit.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                System.exit(0);
+            }
+        });
+
+        comboBox.setPromptText("Default");
+        text.getChildren().add(comboBox);
+
+        TextField courseName = new TextField();
+        courseName.setAlignment(Pos.TOP_LEFT);
+        courseName.setMaxWidth(150);
+        courseName.setPromptText("Course Name");
+        text.getChildren().add(courseName);
+
+
+        TextField courseNum = new TextField();
+        courseNum.setAlignment(Pos.TOP_LEFT);
+        courseNum.setMaxWidth(150);
+        courseNum.setPromptText("Course Code");
+        text.getChildren().add(courseNum);
+        text.setSpacing(10);
+
+        TextField numCredits = new TextField();
+        numCredits.setAlignment(Pos.TOP_LEFT);
+        numCredits.setMaxWidth(200);
+        numCredits.setPromptText("Number of Credits");
+        text.getChildren().add(numCredits);
+
+        // Enter button
+        Button enter = new Button("Enter");
+        enter.setTranslateY(0);
+        enter.setTranslateX(25);
+        enter.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                Course course = new Course();
+                course.setDepartment(comboBox.getValue());
+                course.setCourseName(courseName.getText());
+                course.setCourseCode(courseNum.getText());
+                course.setCredits(Integer.parseInt(numCredits.getText()));
+                tableView.getItems().add(course);
+                courseName.clear();
+                courseNum.clear();
+                numCredits.clear();
+            }
+        });
+
+        text.getChildren().add(enter);
+
+
+        // Save Button
+        Button save = new Button("Save");
+        save.setTranslateX(350);
+        save.setTranslateY(0);
+        buttons.getChildren().add(save);
+        buttons.setSpacing(25);
+
+        save.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                try (Writer writer = new FileWriter("courses.json")) {
+                    Gson gson = new GsonBuilder().create();
+                    gson.toJson(tableView.getItems(), writer);
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        // Load Button
+        Button load = new Button("Load");
+        load.setTranslateX(600);
+        load.setTranslateY(0);
+        buttons.getChildren().add(load);
+        buttons.setSpacing(25);
+
+        load.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                try (Reader reader = new FileReader("courses.json")) {
+                    Gson gson = new Gson();
+                    Course[] courses = gson.fromJson(reader, Course[].class);
+                    ObservableList<Course> observableList = FXCollections.observableArrayList(courses);
+                    tableView.setItems(observableList);
+
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+
+
+        VBox table = new VBox(tableView);
+
+
+        VBox finalWindow = new VBox();
+        finalWindow.setMaxWidth(800);
+        finalWindow.setSpacing(20);
+
+        finalWindow.getChildren().add(text);
+        finalWindow.getChildren().add(table);
+        finalWindow.getChildren().add(buttons);
+
+        Scene scene = new Scene(finalWindow, 920, 280);
+
+
+        primaryStage.setScene(scene);
+        primaryStage.show();
+
     }
 
     public static void main(String[] args) {
-        System.out.println(new App().getGreeting());
+        Application.launch(args);
     }
+
 }
