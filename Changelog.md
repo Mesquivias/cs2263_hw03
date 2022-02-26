@@ -8,6 +8,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 
+## [0.1.0] - 2022-02-25
+
+
+### Added
+ - Added JavaFX feature to make course editor application
+ - Added GSON to serialize and deserialize objects
+ - Added JavaDoc feature
+
+### Changed
+
+
+
+
+### Removed
+
+
+
+
+
+
 ## [0.0.1] - 2022-02-11
 
 
