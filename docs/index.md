@@ -1,8 +1,9 @@
 ##Design
 
+![hw_03 Class Diagram](https://user-images.githubusercontent.com/98442060/155861796-0e2c15bb-6752-44fb-a866-17aa46508fcc.png)
 
 
-
+![hw_03 Class Diagram (1)](https://user-images.githubusercontent.com/98442060/155861803-1d8057f3-6efb-4d5d-b151-87026d77d40c.png)
 
 
 
